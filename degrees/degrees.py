@@ -1,5 +1,6 @@
 import csv
 import sys
+from util import QueueFrontier, Node
 
 from util import Node, StackFrontier, QueueFrontier
 
@@ -55,8 +56,8 @@ def load_data(directory):
 def main():
     if len(sys.argv) > 2:
         sys.exit("Usage: python degrees.py [directory]")
-    directory = sys.argv[1] if len(sys.argv) == 2 else "large"
-
+    # directory = sys.argv[1] if len(sys.argv) == 2 else "large"
+    directory = "small"
     # Load data from files into memory
     print("Loading data...")
     load_data(directory)
@@ -93,7 +94,24 @@ def shortest_path(source, target):
     """
 
     # TODO
-    raise NotImplementedError
+    frontier = QueueFrontier()
+    start_node = Node(source, None, [])
+    frontier.add(start_node)
+
+    while not frontier.empty():
+        node = frontier.remove()
+        if node.state == target:
+            full_path = node.action
+            return full_path
+
+        neighbours = neighbors_for_person(node.state)
+        for movie, actor in list(neighbours):
+            current_path = [path for path in node.action]
+            current_path.append((movie, actor))
+            child_node = Node(actor, node, current_path)
+            frontier.add(child_node)
+
+    return None
 
 
 def person_id_for_name(name):
