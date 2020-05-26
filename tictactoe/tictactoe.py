@@ -113,12 +113,16 @@ def minimax(board):
     if current_player == "X":
         best_value = float("-inf")
         for action in possible_actions:
+            if winner(result(board, action)):
+                return action
             max_val = max_value(result(board, action))
             best_action = action if max_val > best_value else best_action
             best_value = max(best_value, max_val)
     else:
         best_value = float("inf")
         for action in possible_actions:
+            if winner(result(board, action)):
+                return action
             min_val = min_value(result(board, action))
             best_action = action if min_val < best_value else best_action
             best_value = min(best_value, min_val)
