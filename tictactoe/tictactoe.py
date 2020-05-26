@@ -28,11 +28,11 @@ def player(board: object) -> object:
         for j in range((len(board[i]))):
             if board[i][j] == "X":
                 x_count += 1
-            elif board[i][j] == "Y":
+            elif board[i][j] == "O":
                 o_count += 1
             else:
                 continue
-    return "O" if o_count > x_count else "X"
+    return "X" if x_count == o_count else "O"
 
 
 def actions(board):
@@ -83,7 +83,7 @@ def terminal(board):
     """
     Returns True if game is over, False otherwise.
     """
-    if winner(board) is None:
+    if winner(board) is not None:
         return True
 
     for i in range(len(board)):
@@ -98,7 +98,7 @@ def utility(board):
     """
     Returns 1 if X has won the game, -1 if O has won, 0 otherwise.
     """
-    return 1 if winner(board) == "X" else -1 if winner(board) == "Y" else 0
+    return 1 if winner(board) == "X" else -1 if winner(board) == "O" else 0
 
 
 def minimax(board):
