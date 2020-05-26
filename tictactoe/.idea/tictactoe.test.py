@@ -63,6 +63,16 @@ class TestResultFunction(unittest.TestCase):
         ["X", "O", "X"]]
         self.assertEqual(result(before, (0, 1)), after)
 
+    def test_first_move(self):
+        before = [["X", EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY]]
+        after = [["X", EMPTY, EMPTY],
+        ["O", EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY]]
+        self.assertEqual(result(before, (1, 0)), after)
+
+
 
 class TestWinnerFunction(unittest.TestCase):
     def test_x_victory(self):

@@ -54,8 +54,9 @@ def result(board, action):
     """
     i = action[0]
     j = action[1]
-    board[i][j] = player(board)
-    return board
+    new_board = [[col for col in row] for row in board]
+    new_board[i][j] = player(board)
+    return new_board
 
 
 def winner(board):
@@ -105,4 +106,45 @@ def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
-    raise NotImplementedError
+    current_player = player(board)
+    possible_actions = actions(board)
+    best_action = ()
+
+    if current_player == "X":
+        best_value = float("-inf")
+        for action in possible_actions:
+            max_val = max_value(result(board, action))
+            best_action = action if max_val > best_value else best_action
+            best_value = max(best_value, max_val)
+    else:
+        best_value = float("inf")
+        for action in possible_actions:
+            min_val = min_value(result(board, action))
+            best_action = action if min_val < best_value else best_action
+            best_value = min(best_value, min_val)
+
+    return best_action
+
+
+def max_value(board):
+    if terminal(board):
+        return utility(board)
+    v = float("-inf")
+    for action in actions(board):
+        v = max(v, min_value(result(board, action)))
+    return v
+
+
+def min_value(board):
+    if terminal(board):
+        return utility(board)
+    v = float("inf")
+    for action in actions(board):
+        v = min(v, max_value(result(board, action)))
+    return v
+
+
+
+
+
+
