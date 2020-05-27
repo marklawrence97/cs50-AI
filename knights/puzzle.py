@@ -78,10 +78,11 @@ knowledge3 = And(
 
     # If B tells truth
     Implication(BKnight, CKnave),
+    # B tells the truth implies either A is a knight telling the truth or a knave telling a lie.
     Implication(BKnight, Or(Implication(AKnight, AKnave), Implication(AKnave, Not(AKnave)))),
 
     # If B Lies
-    Implication(BKnave, Not(Or(Implication(AKnight, AKnight), Implication(AKnave, Not(AKnight))))),
+    Implication(BKnave, Or(Not(Implication(AKnight, AKnave)), Not(Implication(AKnave, Not(AKnave))))),
     Implication(BKnave, Not(CKnave)),
 
     # If C Tells the truth
@@ -89,6 +90,7 @@ knowledge3 = And(
 
     # If C tells a lie
     Implication(CKnave, Not(AKnight)),
+    BKnave
 )
 
 
