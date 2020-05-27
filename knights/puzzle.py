@@ -74,7 +74,7 @@ knowledge3 = And(
     # A Tells the truth
     Implication(AKnight, Or(AKnight, AKnave)),
     # A Tells a lie
-    Implication(AKnave, Or(Not(AKnight), Not(AKnave))),
+    Implication(AKnave, Not(Or(AKnight, AKnave))),
 
     # If B tells truth
     Implication(BKnight, CKnave),
@@ -90,7 +90,6 @@ knowledge3 = And(
 
     # If C tells a lie
     Implication(CKnave, Not(AKnight)),
-    BKnave
 )
 
 
