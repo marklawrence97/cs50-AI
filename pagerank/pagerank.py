@@ -1,5 +1,6 @@
 import os
 import random
+from numpy.random import choice
 import re
 import sys
 
@@ -57,7 +58,13 @@ def transition_model(corpus, page, damping_factor):
     linked to by `page`. With probability `1 - damping_factor`, choose
     a link at random chosen from all pages in the corpus.
     """
-    raise NotImplementedError
+
+    damping_probability = round((1 - damping_factor) / (len(corpus)), 5)
+    probability_distribution = {key: damping_probability for key in corpus.keys()}
+    for item in list(corpus[page]):
+        probability_distribution[item] += round(damping_factor / len(corpus[page]), 5)
+
+    return probability_distribution
 
 
 def sample_pagerank(corpus, damping_factor, n):
@@ -69,7 +76,24 @@ def sample_pagerank(corpus, damping_factor, n):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
+    i = 0
+    distribution = {keys: 0 for keys in corpus.keys()}
+    page = random.choice(list(corpus.keys()))
+    while i < n:
+        distribution[page] += 1
+        transitions = transition_model(corpus, page, damping_factor)
+        possible_pages = []
+        probabilities = []
+        for keys, values in transitions.items():
+            possible_pages.append(keys)
+            probabilities.append(values)
+        page = choice(possible_pages, 1, replace=False, p=probabilities)[0]
+        i += 1
+
+    for key in distribution.keys():
+        distribution[key] /= n
+
+    return distribution
 
 
 def iterate_pagerank(corpus, damping_factor):
@@ -81,7 +105,20 @@ def iterate_pagerank(corpus, damping_factor):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
+
+    probabilities = {key: 1 / len(corpus) for key in corpus.keys()}
+    linking_to = {key: set() for key in corpus.keys()}
+    for key in corpus.keys():
+        for link in corpus[key]:
+            linking_to[link].add(key)
+    i = 0
+    while i < 10000:
+        for page in corpus.keys():
+            other_pages = [probabilities[item] / len(corpus[item]) for item in linking_to[page]]
+            probabilities[page] = (1 - damping_factor) / len(corpus) + damping_factor * sum(other_pages)
+        i += 1
+
+    return probabilities
 
 
 if __name__ == "__main__":
